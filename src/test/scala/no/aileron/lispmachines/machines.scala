@@ -10,6 +10,7 @@ class MachineSpec extends FlatSpec with ShouldMatchers {
 	val m2 = new LispMachine("intrepid", w)
 	val m3 = new ClockMachine("timekeeper", w)
 	val m4 = new PrintMachine("timereader", w)
+	val m5 = new LispMachine("unlinked", w)
 	val l1 = w.newLink(m1, m2)
 	val l2 = w.newLink(m2, m1)
 	val l3 = w.newLink(m3, m4)
@@ -18,12 +19,20 @@ class MachineSpec extends FlatSpec with ShouldMatchers {
 	val ms = w.machines
 
 	"Machines" should "be four" in {
-		ms.size should equal (4)
+		ms.size should equal (5)
 	}
 
 	it should "read time" in {
 		w.tick
 		// "timereader" should print the current second
+	}
+
+	it should "be able to overread input from link" in {
+		m1.repl.executeLine("(input)") should equal (List()) // always a List
+	}
+
+	it should "be able to overread input from missing link" in {
+		m5.repl.executeLine("(input)") should equal (List()) // always a List
 	}
 
 	"Links" should "be three" in {

@@ -17,12 +17,14 @@ class World {
   }
 
   def output(m: Machine, l: List[Any]) {
-    links.filter(_.input == m).head.put(l)
+    val outputLinks = links.filter(_.input == m)
+    if (outputLinks.size > 0) outputLinks.head.put(l)
   }
 
   // If there are multiple links to this machine, the "first" link will be emptied before the next is used
   def input(m: Machine): List[Any] = {
-    links.filter(_.output == m).head.get
+    val inputLinks = links.filter(_.output == m)
+    if (inputLinks.size > 0) inputLinks.head.get else Nil
   }
 
   def tick {
@@ -37,6 +39,7 @@ class Link(val input: Machine, val output: Machine) {
   }
 
   def get: List[Any] = {
+    if (length == 0) return Nil
     val v = buffer.head
     buffer.trimStart(1)
     return v
