@@ -6,20 +6,28 @@ import org.scalatest.matchers.ShouldMatchers
 class MachineSpec extends FlatSpec with ShouldMatchers {
 
 	val w = new World()
-	val m1 = w.newLispMachine("voyager")
-	val m2 = w.newLispMachine("intrepid")
+	val m1 = new LispMachine("voyager", w)
+	val m2 = new LispMachine("intrepid", w)
+	val m3 = new ClockMachine("timekeeper", w)
+	val m4 = new PrintMachine("timereader", w)
 	val l1 = w.newLink(m1, m2)
 	val l2 = w.newLink(m2, m1)
+	val l3 = w.newLink(m3, m4)
 
 	val ls = w.links
 	val ms = w.machines
 
-	"Machines" should "be two" in {
-		ms.size should equal (2)
+	"Machines" should "be four" in {
+		ms.size should equal (4)
 	}
 
-	"Links" should "be two" in {
-		ls.size should equal (2)
+	it should "read time" in {
+		w.tick
+		// "timereader" should print the current second
+	}
+
+	"Links" should "be three" in {
+		ls.size should equal (3)
 	}
 
   "World" should "have working buffers" in {
